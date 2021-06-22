@@ -8,12 +8,42 @@ const routes = [
     component: Home
   },
   {
-    path: '/about',
-    name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+    path: '/profile',
+    name: 'Profile',
+    component: () => import(/* webpackChunkName: "Profile" */ '../views/Profile.vue')
+  },
+
+  {
+    path: '/marble/:id',
+    name: 'MarbleDetail',
+    props: true,
+    component: () => import(/* webpackChunkName: "MarbleDetail" */ '../views/marble/MarbleDetail.vue')
+  },
+
+  {
+    path: '/marble/edit/:id',
+    name: 'MarbleEdit',
+    props: true,
+    component: () => import(/* webpackChunkName: "MarbleEdit" */ '../views/marble/MarbleEdit.vue')
+  },
+
+  {
+    path: '/marble/create/',
+    name: 'MarbleCreate',
+    props: true,
+    component: () => import(/* webpackChunkName: "MarbleCreate" */ '../views/marble/MarbleEdit.vue')
+  },
+
+  {
+    path: '/bags',
+    name: 'Bags',
+    component: () => import(/* webpackChunkName: "Bags" */ '../views/Bags.vue')
+  },
+
+  {
+    path: '/:catchAll(.*)',
+    name: 'FileNotFound',
+    component: () => import(/* webpackChunkName: "FileNotFound" */ '../views/FileNotFound.vue')
   }
 ]
 
