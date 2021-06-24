@@ -8,11 +8,16 @@ const routes = [
     component: Home
   },
   {
-    path: '/profile',
+    path: '/profile/:username',
     name: 'Profile',
+    props: true,
     component: () => import(/* webpackChunkName: "Profile" */ '../views/Profile.vue')
   },
-
+  {
+    path: '/login',
+    name: 'Login',
+    component: () => import(/* webpackChunkName: "Login" */ '../views/Login.vue')
+  },
   {
     path: '/marble/:id',
     name: 'MarbleDetail',

@@ -1,10 +1,15 @@
 <template>
-  <h1>Profile</h1>
+  <h1>Profile: {{ username }}</h1>
 </template>
 
 <script>
-export default {
+import checkLogin from "@/composables/checkLogin"
 
+export default {
+  props: ['username'],
+  setup() {
+    checkLogin()
+  }
 }
 </script>
 

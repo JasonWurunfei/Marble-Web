@@ -3,8 +3,13 @@
 </template>
 
 <script>
+import checkLogin from "@/composables/checkLogin"
+
 export default {
-  props: ['id']
+  props: ['id'],
+  setup() {
+    checkLogin()
+  }
 }
 </script>
 
