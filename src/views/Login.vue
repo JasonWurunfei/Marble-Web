@@ -27,8 +27,8 @@ export default {
 
       const next = route.params['next']
       if (next) router.push({
-        name:'Profile',
-        params: {username: store.state.user.username}
+        name: next,
+        params: {username: username.value}
       })
     }
     return { username, login }

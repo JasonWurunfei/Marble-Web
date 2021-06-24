@@ -3,7 +3,7 @@ import { createStore } from 'vuex'
 export default createStore({
   state: {
     isLogin: false,
-    user: null
+    user: null,
   },
   mutations: {
     changeLoginState(state, isLogin) {
@@ -11,7 +11,7 @@ export default createStore({
     },
     setUser(state, user) {
       state.user = user
-    }
+    },
   },
   actions: {
     async login({commit}, {username, axios}) {
@@ -20,11 +20,13 @@ export default createStore({
         commit('setUser', res.data)
         commit('changeLoginState', true)
       } catch(err) {
-        alert(`登录用户"${username}"不存在`)
+        if (err.response.status === 401)
+          alert(`登录用户"${username}"不存在`)
       }
     },
     logout({commit}) {
       commit('changeLoginState', false)
+      commit('setUser', null)
     },
   },
   modules: {

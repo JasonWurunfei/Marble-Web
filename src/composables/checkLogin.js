@@ -8,6 +8,6 @@ export default function checkLogin() {
 
   let isLogin = store.state.isLogin
   if (isLogin == false) {
-    router.push({name: "Login", params: {next: route.fullPath}})
+    router.push({name: "Login", params: {next: route.name}})
   }
 }
