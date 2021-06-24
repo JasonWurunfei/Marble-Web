@@ -11,14 +11,15 @@ import { useRouter } from 'vue-router'
 export default {
   props: ['username'],
   setup() {
-    checkLogin()
-    const store = useStore()
-    const router = useRouter()
-    const logout = () => {
-      store.dispatch("logout")
-      router.push({name: 'Home'})
-    }
-    return { logout }
+    return checkLogin(() => {
+      const store = useStore()
+      const router = useRouter()
+      const logout = () => {
+        store.dispatch("logout")
+        router.push({name: 'Home'})
+      }
+      return { logout }
+    })
   }
 }
 </script>
