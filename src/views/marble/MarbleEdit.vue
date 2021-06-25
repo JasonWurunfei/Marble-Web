@@ -3,20 +3,21 @@
   <h2 v-else>Create Marble</h2>
   <form @submit.prevent="createMarble">
     <label>Name</label>
-    <input type="text" v-model="name" required>
+    <input type="text" ref="name" required>
     
     <label>Translation</label>
-    <input type="text" v-model="translation" required>
+    <input type="text" ref="translation" required>
     
     <label>Story</label>
-    <input type="text" v-model="story">
-    
+    <input type="text" ref="story">
+
     <label>Picture</label>
-    <input type="file">
+    <input type="file" @change="cons($event)">
+    <button>上传文件</button>
     
     <label>Audio</label>
     <input type="file">
-    
+
     <label>Media</label>
     <input type="file">
 
@@ -48,16 +49,16 @@ export default {
           method: 'post',
           url: "marble/",
           data: {
-            name: name.value,
+            name: name.value.value,
             userId: parseInt(userId),
-            translation: translation.value,
-            story: story.value
+            translation: translation.value.value,
+            story: story.value.value
           }
         })
       }
-      return { name, translation, story, createMarble }
+
+      return { name, translation, story, createMarble, cons }
     })
-    
   }
 }
 </script>
@@ -96,7 +97,7 @@ export default {
     position: relative;
     top: 2px;
   }
-  button {
+  .submit {
     background: #0b6dff;
     border: 0;
     padding: 10px 20px;
