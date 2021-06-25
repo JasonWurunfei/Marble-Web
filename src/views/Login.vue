@@ -1,5 +1,5 @@
 <template>
-  <input type="text" v-model="username">
+  <input type="text" v-model="username" @keydown="enter">
   <button @click="login">Login</button>
 </template>
 
@@ -26,12 +26,26 @@ export default {
       })
 
       const next = route.params['next']
-      if (next) router.push({
-        name: next,
-        params: {username: username.value}
-      })
+      if (next) {
+        router.push({
+          name: next,
+          params: {username: username.value}
+        })
+      } else {
+        router.push({
+          name: "Profile",
+          params: {username: username.value}
+        })
+      }
     }
-    return { username, login }
+
+    const enter = (e) => {
+      if (e.key === "Enter") {
+        login()
+      }
+    }
+    
+    return { username, login, enter }
   }
 }
 </script>
