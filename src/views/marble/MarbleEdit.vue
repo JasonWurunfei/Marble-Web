@@ -12,14 +12,16 @@
     <input type="text" ref="story">
 
     <label>Picture</label>
-    <input type="file" @change="cons($event)">
-    <button>上传文件</button>
+    <input ref="pictures" type="file">
+    <button @click.prevent="uploadImage">上传文件</button>
     
     <label>Audio</label>
-    <input type="file">
+    <input ref="audio" type="file">
+    <button @click.prevent="uploadAudio">上传文件</button>
 
-    <label>Media</label>
-    <input type="file">
+    <label>Video</label>
+    <input ref="video" type="file">
+    <button @click.prevent="uploadVideo">上传文件</button>
 
     <button class="submit">Create</button> 
   </form>
@@ -42,9 +44,11 @@ export default {
       const story = ref('')
       const translation = ref('')
       const axios = inject("$axios")
+      const pictures = ref(null)
+      const audio = ref(null)
+      const video = ref(null)
 
       const createMarble = () => {
-        const creationTime = Date.now()
         axios({
           method: 'post',
           url: "marble/",
@@ -57,7 +61,43 @@ export default {
         })
       }
 
-      return { name, translation, story, createMarble, cons }
+      const getMarbleId = () => {
+        axios({
+          method: 'get',
+          url: ""
+        })
+      }
+
+      const uploadFile = async (file, marbleId, type) => {
+        const fd = new FormData()
+        fd.append("file", file)
+        fd.append("marbleId", marbleId)
+        fd.append("type", type)
+        await axios.post('impression/', fd);
+      }
+
+      const uploadVideo = () => {
+        uploadFile(pictures.value.files[0], 1, 1)
+      }
+      const uploadImage = () => {
+        uploadFile(audio.value.files[0], 1, 2)
+      }
+      const uploadAudio = () => {
+        uploadFile(media.value.files[0], 1, 3)
+      }
+
+      return { 
+        name, 
+        translation, 
+        story, 
+        pictures, 
+        audio,
+        video,
+        createMarble,
+        uploadVideo,
+        uploadImage,
+        uploadAudio 
+      }
     })
   }
 }
