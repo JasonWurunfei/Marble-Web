@@ -1,18 +1,18 @@
 <template>
-  <button id="LogoutBtn" @click="callback">
-    <img src="@/assets/exit.svg" alt="">
-    <div>Logout</div>
+  <button class="white-square-btn" @click="callback">
+    <img :src="icon" alt="">
+    <div>{{text}}</div>
   </button>
 </template>
 
 <script>
 export default {
-  props: ['callback']
+  props: ['text', 'icon', 'callback'],
 }
 </script>
 
 <style>
-#LogoutBtn {
+.white-square-btn {
   border: none;
   padding: 1.5rem 3rem;
   border-radius: 15px;
@@ -23,7 +23,7 @@ export default {
   align-items: center;
 }
 
-#LogoutBtn img {
+.white-square-btn img {
   width: 2rem;
   margin-right: 1rem;
 }

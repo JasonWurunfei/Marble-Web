@@ -4,20 +4,23 @@
       <h1 class="caption">{{ period }}好! {{ username }}</h1>
     </div>
     <div class="dashboard">
-      <LogoutBtn :callback="logout" />
+      <WhiteSquareBtn 
+        text="Logout"
+        :icon='require("@/assets/exit.svg")'
+        :callback="logout" />
     </div>
   </div>
 </template>
 
 <script>
 import checkLogin from "@/composables/checkLogin"
-import LogoutBtn from "@/components/buttons/LogoutBtn.vue"
+import WhiteSquareBtn from "@/components/buttons/WhiteSquareBtn.vue"
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 
 export default {
   props: ['username'],
-  components: {LogoutBtn},
+  components: {WhiteSquareBtn},
   setup() {
     return checkLogin(() => {
       const store = useStore()
