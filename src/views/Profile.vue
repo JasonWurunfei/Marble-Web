@@ -1,7 +1,9 @@
 <template>
-  <div class="profile">
-    <div class="hero" v-if="period">
-      <h1 class="caption">{{ period }}好! {{ username }}</h1>
+  <div class="profile" >
+    <div class="hero">
+      <h1 class="caption" v-if="user">
+        {{ period }}好! {{ user.username }}
+      </h1>
     </div>
     <div class="dashboard">
       <WhiteSquareBtn 
@@ -13,38 +15,38 @@
 </template>
 
 <script>
-import checkLogin from "@/composables/checkLogin"
+
 import WhiteSquareBtn from "@/components/buttons/WhiteSquareBtn.vue"
-import { useStore } from 'vuex'
+import {useStore} from 'vuex'
 import { useRouter } from 'vue-router'
+import { ref } from 'vue'
 
 export default {
-  props: ['username'],
   components: {WhiteSquareBtn},
   setup() {
-    return checkLogin(() => {
-      const store = useStore()
-      const router = useRouter()
-      const logout = () => {
-        store.dispatch("logout")
-        router.push({name: 'Home'})
-      }
+    const store = useStore()
+    const router = useRouter()
 
-      const hour = new Date().getHours()
-      let period
-      if (hour <= 12) {
-        period = "早上"
-      }
+    const user = store.state.user
+    const logout = () => {
+      store.dispatch("logout")
+      router.push({name: 'Home'})
+    }
 
-      if (12< hour && hour <= 18) {
-        period = "下午"
-      }
+    const period = ref("")
+    const hour = new Date().getHours()
+    if (hour <= 12) {
+      period.value = "早上"
+    }
 
-      if (hour > 18) {
-        period = "晚上"
-      }
-      return { logout, period }
-    })
+    if (12< hour && hour <= 18) {
+      period.value = "下午"
+    }
+
+    if (hour > 18) {
+      period.value = "晚上"
+    }
+    return { logout, period, user }
   }
 }
 </script>
