@@ -1,7 +1,7 @@
 <template>
   <h1 v-if="id">Edit Marble {{ id }}</h1>
   <h2 v-else>Create Marble</h2>
-  <form @submit.prevent="createMarble">
+  <form @submit.prevent="createMarbleAndImpression">
     <label>Name</label>
     <input type="text" ref="name" required>
     
@@ -11,17 +11,14 @@
     <label>Story</label>
     <input type="text" ref="story">
 
-    <label>Picture</label>
-    <input ref="pictures" type="file">
-    <button @click.prevent="uploadImage">上传文件</button>
+    <label>Image</label>
+    <input ref="image" type="file" class="file">
     
     <label>Audio</label>
-    <input ref="audio" type="file">
-    <button @click.prevent="uploadAudio">上传文件</button>
+    <input ref="audio" type="file" class="file">
 
     <label>Video</label>
-    <input ref="video" type="file">
-    <button @click.prevent="uploadVideo">上传文件</button>
+    <input ref="video" type="file" class="file">
 
     <button class="submit">Create</button> 
   </form>
@@ -36,18 +33,36 @@ import { ref } from '@vue/reactivity'
 export default {
   props: ['id'],
   setup() {
-    const marbleId  = null;
     const store = useStore()
     const name = ref('')
     const userId = store.state.user.id
     const story = ref('')
     const translation = ref('')
     const axios = inject("$axios")
-    const pictures = ref(null)
+    const image = ref(null)
     const audio = ref(null)
     const video = ref(null)
 
-    const createMarble = () => {
+    const uploadFile = async (file, marbleId, type) => {
+      const fd = new FormData()
+      fd.append("file", file)
+      fd.append("marbleId", marbleId)
+      fd.append("type", type)
+      return await axios.post('api/impression/', fd)
+    }
+
+    const uploadVideo = async (marbleId) => {
+      return uploadFile(video.value.files[0], marbleId, 1)
+    }
+    const uploadImage = async (marbleId) => {
+      return uploadFile(image.value.files[0], marbleId, 2)
+    }
+    const uploadAudio = async (marbleId) => {
+      return uploadFile(audio.value.files[0], marbleId, 3)
+    }
+
+    const createMarbleAndImpression = () => {
+      let marbleId
       axios({
         method: 'post',
         url: "api/marble/",
@@ -59,51 +74,42 @@ export default {
         }
       }).then(res => {
         marbleId = res.data.id
+
+        if(document.querySelectorAll(".file")[0].files[0] !== undefined) uploadImage(marbleId)
+        if (document.querySelectorAll(".file")[1].files[0] !== undefined) uploadAudio(marbleId)
+        if(document.querySelectorAll(".file")[2].files[0] !== undefined) uploadVideo(marbleId)
+
+        alert("Successfully Created！")
       })
-    }
-
-    const uploadFile = async (file, marbleId, type) => {
-      const fd = new FormData()
-      fd.append("file", file)
-      fd.append("marbleId", marbleId)
-      fd.append("type", type)
-      await axios.post('impression/', fd);
-    }
-
-    const uploadVideo = () => {
-      uploadFile(pictures.value.files[0], marbleId, 1)
-    }
-    const uploadImage = () => {
-      uploadFile(audio.value.files[0], marbleId, 2)
-    }
-    const uploadAudio = () => {
-      uploadFile(media.value.files[0], marbleId, 3)
     }
 
     return { 
       name, 
       translation, 
       story, 
-      marbleId,
-      pictures, 
+      image, 
       audio,
       video,
-      createMarble,
       uploadVideo,
       uploadImage,
-      uploadAudio 
+      uploadAudio,
+      createMarbleAndImpression
     }
   }
 }
 </script>
 
 <style scoped>
+  h2 {
+    margin: 10px 0 0 0;
+    text-align: center;
+  }
   form {
       max-width: 30px 420px;
-      margin: 30px auto;
+      margin: 0px auto;
       background: white;
       text-align: left;
-      padding: 40px;
+      padding: 20px;
       border-radius: 10px;
   }
   label {
@@ -141,6 +147,7 @@ export default {
     cursor: pointer;
   }
   .submit {
+    display: block;
     text-align: center;
   }
 </style>
