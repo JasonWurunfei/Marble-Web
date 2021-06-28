@@ -32,68 +32,67 @@
 import { inject } from 'vue'
 import { useStore } from 'vuex'
 import { ref } from '@vue/reactivity'
-import checkLogin from "@/composables/checkLogin"
 
 export default {
   props: ['id'],
   setup() {
-    return checkLogin(() => {
-      const store = useStore()
-      const name = ref('')
-      const userId = store.state.user.id
-      const story = ref('')
-      const translation = ref('')
-      const axios = inject("$axios")
-      const pictures = ref(null)
-      const audio = ref(null)
-      const video = ref(null)
+    const marbleId  = null;
+    const store = useStore()
+    const name = ref('')
+    const userId = store.state.user.id
+    const story = ref('')
+    const translation = ref('')
+    const axios = inject("$axios")
+    const pictures = ref(null)
+    const audio = ref(null)
+    const video = ref(null)
 
-      const createMarble = () => {
-        axios({
-          method: 'post',
-          url: "marble/",
-          data: {
-            name: name.value.value,
-            userId: parseInt(userId),
-            translation: translation.value.value,
-            story: story.value.value
-          }
-        }).then(res => {
-          const marbleId = res.data.id
-        })
-      }
+    const createMarble = () => {
+      axios({
+        method: 'post',
+        url: "api/marble/",
+        data: {
+          name: name.value.value,
+          userId: parseInt(userId),
+          translation: translation.value.value,
+          story: story.value.value
+        }
+      }).then(res => {
+        marbleId = res.data.id
+      })
+    }
 
-      const uploadFile = async (file, marbleId, type) => {
-        const fd = new FormData()
-        fd.append("file", file)
-        fd.append("marbleId", marbleId)
-        fd.append("type", type)
-        await axios.post('impression/', fd);
-      }
+    const uploadFile = async (file, marbleId, type) => {
+      const fd = new FormData()
+      fd.append("file", file)
+      fd.append("marbleId", marbleId)
+      fd.append("type", type)
+      await axios.post('impression/', fd);
+    }
 
-      const uploadVideo = () => {
-        uploadFile(pictures.value.files[0], marbleId, 1)
-      }
-      const uploadImage = () => {
-        uploadFile(audio.value.files[0], marbleId, 2)
-      }
-      const uploadAudio = () => {
-        uploadFile(media.value.files[0], marbleId, 3)
-      }
+    const uploadVideo = () => {
+      uploadFile(pictures.value.files[0], marbleId, 1)
+    }
+    const uploadImage = () => {
+      uploadFile(audio.value.files[0], marbleId, 2)
+    }
+    const uploadAudio = () => {
+      uploadFile(media.value.files[0], marbleId, 3)
+    }
 
-      return { 
-        name, 
-        translation, 
-        story, 
-        pictures, 
-        audio,
-        video,
-        createMarble,
-        uploadVideo,
-        uploadImage,
-        uploadAudio 
-      }
-    })
+    return { 
+      name, 
+      translation, 
+      story, 
+      marbleId,
+      pictures, 
+      audio,
+      video,
+      createMarble,
+      uploadVideo,
+      uploadImage,
+      uploadAudio 
+    }
   }
 }
 </script>
