@@ -16,7 +16,7 @@ export default createStore({
   actions: {
     async login({commit}, {username, axios}) {
       try {
-        const res = await axios.get("user/login?username=" + username)
+        const res = await axios.get("api/user/login?username=" + username)
         commit('setUser', res.data)
         commit('changeLoginState', true)
       } catch(err) {

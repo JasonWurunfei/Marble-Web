@@ -29,7 +29,7 @@ export default {
     const axios = inject("$axios")
     const store = useStore()
 
-    axios.get("bag/user/"+store.state.user.id)
+    axios.get("api/bag/user/"+store.state.user.id)
     .then(res => {
       res.data.forEach(bag => bags.value.push(bag))
     })
@@ -38,7 +38,7 @@ export default {
     const show = (bag) => {
       if (bag.open == true) bag.open = false;
       else {
-        axios.get("bag/marbles/"+bag.id)
+        axios.get("api/bag/marbles/"+bag.id)
         .then(res => {
           bag.marbles = res.data
           bag.open = true

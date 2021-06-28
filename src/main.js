@@ -7,4 +7,5 @@ import store from './store'
 const app = createApp(App)
 const $axios = axios.create({baseURL: process.env.VUE_APP_API_URL})
 app.provide("$axios", $axios)
+app.provide("baseURL", process.env.VUE_APP_API_URL)
 app.use(store).use(router).mount('#app')
