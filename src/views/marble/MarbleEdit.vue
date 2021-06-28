@@ -58,13 +58,8 @@ export default {
             translation: translation.value.value,
             story: story.value.value
           }
-        })
-      }
-
-      const getMarbleId = () => {
-        axios({
-          method: 'get',
-          url: ""
+        }).then(res => {
+          const marbleId = res.data.id
         })
       }
 
@@ -77,13 +72,13 @@ export default {
       }
 
       const uploadVideo = () => {
-        uploadFile(pictures.value.files[0], 1, 1)
+        uploadFile(pictures.value.files[0], marbleId, 1)
       }
       const uploadImage = () => {
-        uploadFile(audio.value.files[0], 1, 2)
+        uploadFile(audio.value.files[0], marbleId, 2)
       }
       const uploadAudio = () => {
-        uploadFile(media.value.files[0], 1, 3)
+        uploadFile(media.value.files[0], marbleId, 3)
       }
 
       return { 
