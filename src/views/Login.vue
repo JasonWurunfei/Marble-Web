@@ -43,10 +43,7 @@ export default {
 
       const next = route.params['next']
       if (next) {
-        router.push({
-          name: next,
-          params: {username: username.value}
-        })
+        router.push(next)
       } else {
         router.push({
           name: "Profile",

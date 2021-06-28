@@ -7,25 +7,12 @@
       <router-link :to="{name: 'Bags'}"  class="btn">
         <img src="@/assets/bag-icon.svg" alt="bag icon" class="btn-icon btn-icon--middle">
       </router-link>
-      <router-link 
-        :to="{name: 'Profile', params: {username: username }}"
-        class="btn"
-      >
+      <router-link :to="{name: 'Profile'}" class="btn">
         <img src="@/assets/profile-icon.svg" alt="profile icon" class="btn-icon">
       </router-link>
     </nav>
   </div>
 </template>
-
-<script>
-import { ref } from '@vue/reactivity'
-export default {
-  setup() {
-    const username = ref('guest')
-    return { username }
-  }
-}
-</script>
 
 <style>
 .navbar {

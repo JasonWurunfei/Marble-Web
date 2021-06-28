@@ -1,6 +1,12 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../views/Home.vue'
 
+import store from '@/store'
+function loginRequired(to, from, next) {
+  if (store.state.isLogin) next()
+  else next({name: "Login", params: {next:  to.fullPath}})
+}
+
 const routes = [
   {
     path: '/',
@@ -8,10 +14,10 @@ const routes = [
     component: Home
   },
   {
-    path: '/profile/:username',
+    path: '/profile/',
     name: 'Profile',
-    props: true,
-    component: () => import(/* webpackChunkName: "Profile" */ '../views/Profile.vue')
+    component: () => import(/* webpackChunkName: "Profile" */ '../views/Profile.vue'),
+    beforeEnter: loginRequired
   },
   {
     path: '/login',
@@ -22,7 +28,8 @@ const routes = [
     path: '/marble/:id',
     name: 'MarbleDetail',
     props: true,
-    component: () => import(/* webpackChunkName: "MarbleDetail" */ '../views/marble/MarbleDetail.vue')
+    component: () => import(/* webpackChunkName: "MarbleDetail" */ '../views/marble/MarbleDetail.vue'),
+    beforeEnter: loginRequired
   },
 
   {
@@ -42,7 +49,8 @@ const routes = [
   {
     path: '/bags',
     name: 'Bags',
-    component: () => import(/* webpackChunkName: "Bags" */ '../views/Bags.vue')
+    component: () => import(/* webpackChunkName: "Bags" */ '../views/Bags.vue'),
+    beforeEnter: loginRequired
   },
 
   {
