@@ -1,7 +1,7 @@
 <template>
   <h1 v-if="id">Edit Marble {{ id }}</h1>
-  <h2 v-else>Create Marble</h2>
-  <form @submit.prevent="createMarbleAndImpression">
+  <h1 v-else>Create Marble</h1>
+  <form>
     <label>Name</label>
     <input type="text" ref="name" required>
     
@@ -20,19 +20,20 @@
     <label>Video</label>
     <input ref="video" type="file" class="file">
 
-    <button class="submit">Create</button> 
+    <button class="submit" v-if="id" @click.prevent="editMarble">Edit</button> 
+    <button class="submit" v-else  @click.prevent="createMarbleAndImpression">Create</button>
   </form>
   
 </template>
 
 <script>
-import { inject } from 'vue'
+import { inject, onMounted } from 'vue'
 import { useStore } from 'vuex'
 import { ref } from '@vue/reactivity'
 
 export default {
   props: ['id'],
-  setup() {
+  setup(props) {
     const store = useStore()
     const name = ref('')
     const userId = store.state.user.id
@@ -43,6 +44,7 @@ export default {
     const audio = ref(null)
     const video = ref(null)
 
+    // Create Marble Part
     const uploadFile = async (file, marbleId, type) => {
       const fd = new FormData()
       fd.append("file", file)
@@ -83,6 +85,61 @@ export default {
       })
     }
 
+    // Edit Marble Part
+
+    /**
+     * This method loads the data into <input type = 'text'> tags
+     */
+    const loadTextData = () => {
+      axios
+      .get("api/marble/"+props.id)
+      .then(res => {
+          name.value = res.data.name
+          translation.value = res.data.translation
+          story.value = res.data.story
+          // Load Data to Text Input Tag
+          document.querySelectorAll("input")[0].value = name.value
+          document.querySelectorAll("input")[1].value = translation.value
+          document.querySelectorAll("input")[2].value = story.value
+      })
+    }
+
+    // Ready to update the marble 
+    const editMarble = () => {
+      console.log(name.value)
+      // axios({
+      //   method: 'put',
+      //   url: 'api/marble/',
+      //   data: {
+      //     name: name.value,
+      //     userId: parseInt(userId),
+      //     translation: translation.value,
+      //     story: story.value,
+      //     id: props.id
+      //   }
+      // })
+    }
+    /**
+     * This method loads the data into <input type = 'file'> tags
+     */
+      // const loadFileData = () => {
+      //   axios
+      //   .get("api/impression/marble/"+props.id)
+      //   .then(res => {
+      //     const type = res.data[0].type
+      //     if (type == 1) {
+      //       const fileName = res.data[0].path
+      //       console.log(fileName)
+      //     }
+      //   })
+      // }
+
+    onMounted(() => {
+      if (props.id !== undefined) {
+        loadTextData()
+      } 
+    })
+
     return { 
       name, 
       translation, 
@@ -93,42 +150,43 @@ export default {
       uploadVideo,
       uploadImage,
       uploadAudio,
-      createMarbleAndImpression
+      createMarbleAndImpression,
+      editMarble
     }
-  }
+  },
 }
 </script>
 
 <style scoped>
-  h2 {
+  h1 {
     margin: 10px 0 0 0;
     text-align: center;
   }
   form {
-      max-width: 30px 420px;
-      margin: 0px auto;
-      background: white;
-      text-align: left;
-      padding: 20px;
-      border-radius: 10px;
+    padding: 20px;
+    margin: 0px auto;
+    text-align: left;
+    background: white;
+    border-radius: 10px;
+    max-width: 30px 420px;
   }
   label {
-      color: #aaa;
-      display: inline-block;
-      margin: 25px 0 15px;
-      font-size: 0.6em;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      font-weight: bold;
+    color: #aaa;
+    display: inline-block;
+    margin: 25px 0 15px;
+    font-size: 0.6em;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: bold;
   }
   input, select {
-      display: block;
-      padding: 10px 6px;
-      width: 100%;
-      box-sizing: border-box;
-      border: none;
-      border-bottom: 1px solid #ddd;
-      color: #555;
+    display: block;
+    padding: 10px 6px;
+    width: 100%;
+    box-sizing: border-box;
+    border: none;
+    border-bottom: 1px solid #ddd;
+    color: #555;
   }
   input[type='checkbox'] {
     display: inline-block;
@@ -145,9 +203,6 @@ export default {
     color: white;
     border-radius: 20px;
     cursor: pointer;
-  }
-  .submit {
-    display: block;
     text-align: center;
   }
 </style>

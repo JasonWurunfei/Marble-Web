@@ -36,7 +36,8 @@ const routes = [
     path: '/marble/edit/:id',
     name: 'MarbleEdit',
     props: true,
-    component: () => import(/* webpackChunkName: "MarbleEdit" */ '../views/marble/MarbleEdit.vue')
+    component: () => import(/* webpackChunkName: "MarbleEdit" */ '../views/marble/MarbleEdit.vue'),
+    beforeEnter: loginRequired
   },
 
   {
